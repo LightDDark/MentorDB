@@ -25,7 +25,7 @@ namespace API.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<InUser>> PostUser(InUser user)
+        public async Task<IActionResult> PostUser(InUser user)
         {
             bool? res = await _service.AddUser(new User() { Id = user.Id, Name = user.Name, Password = user.Password, Email = user.Email});
 
