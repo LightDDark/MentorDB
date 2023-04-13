@@ -61,7 +61,7 @@ namespace API.Controllers
             bool? res = await _service.AddMission(new Mission()
             {
                 Title = mission.Title,
-                Descroption = mission.Descroption,
+                Description = mission.Description,
                 StartDate = mission.StartDate,
                 EndDate = mission.EndDate
             }, _userId);
