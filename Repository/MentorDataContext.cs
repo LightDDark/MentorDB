@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Priv;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -14,6 +15,10 @@ namespace Repository
         public DbSet<User>? User { get; set; }
 
         public DbSet<Mission>? Mission { get; set; }
+
+        public DbSet<ScheduleSetting>? ScheduleSetting { get; set; }
+
+        public DbSet<MissionRank>? MissionRank { get; set; }
 
     }
 }

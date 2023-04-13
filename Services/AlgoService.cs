@@ -1,4 +1,5 @@
-﻿using Repository;
+﻿using Domain.Out;
+using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,13 @@ namespace Services
         public AlgoService(MentorDataContext context)
         {
             _context = context;
+        }
+
+        public async Task<UiComplete> CalculateSchedule(string userId, AlgoComplete missions) {
+            // call algo with missions
+            
+            // return algo results
+            return new UiComplete();
         }
     }
 }

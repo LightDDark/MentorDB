@@ -15,5 +15,6 @@ namespace Domain
         [EmailAddress] public string Email { get; set; }
         public string Password { get; set; }
         public List<Mission> Missions { get; set; } = new List<Mission>();
+        public ScheduleSetting Schedule { get; set; } = new ScheduleSetting();
     }
 }
