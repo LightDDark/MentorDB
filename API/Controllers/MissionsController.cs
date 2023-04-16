@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Out;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Protocol;
@@ -12,10 +13,10 @@ namespace API.Controllers
     [Authorize]
     public class MissionsController : ControllerBase
     {
-        private readonly UsersService _service;
+        private readonly MissionService _service;
         private readonly string _userId;
 
-        public MissionsController(UsersService service)
+        public MissionsController(MissionService service)
         {
             _service = service;
             _userId = HttpContext.User.Claims.First().Value;
@@ -24,9 +25,9 @@ namespace API.Controllers
         // GET: api/Contacts
         // returns list of contacts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Mission>>> GetMissions()
+        public async Task<ActionResult<IEnumerable<UiMission>>> GetMissions()
         {
-            List<Mission>? missions = await _service.GetMissions(_userId);
+            List<UiMission>? missions = await _service.GetMissions(_userId);
             if (missions == null)
             {
                 return NotFound();
@@ -40,9 +41,9 @@ namespace API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         // update details of contact with the given id
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMission(int missionId)
+        public async Task<IActionResult> PutMission(int missionId, UiMission mission)
         {
-            bool res = await _service.UpdateMission(missionId, _userId);
+            bool res = await _service.UpdateMission(mission, _userId);
             if (res == false)
             {
                 return NotFound();
