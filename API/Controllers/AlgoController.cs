@@ -12,18 +12,16 @@ namespace API.Controllers {
     [Authorize]
     public class AlgoController : ControllerBase {
         private readonly AlgoService _service;
-        private readonly string _userId;
 
         public AlgoController(AlgoService service) {
             _service = service;
-            _userId = HttpContext.User.Claims.First().Value;
         }
 
         // Post: api/Algo
         // returns list of contacts
         [HttpPost]
-        public async Task<ActionResult<UiComplete>> NewSchedule(AlgoComplete newMissions) {
-            UiComplete? missions = await _service.CalculateSchedule(_userId, newMissions);
+        public async Task<ActionResult<UiComplete>> NewSchedule(ScheduleSetting setting, List<int> missionsId) {
+            UiComplete? missions = await _service.CalculateSchedule(HttpContext.User.Claims.First().Value, setting, missionsId);
             if (missions == null) {
                 return NotFound();
             }

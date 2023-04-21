@@ -13,11 +13,11 @@ namespace Domain {
         "maxHoursPerTypePerDay": {"A": 3, "B": 2},
         "minTimeFrame": 15*/
     public class ScheduleSetting {
-        [Key] int id;
-        DateTime StartHour { get; set; } = new DateTime(0, 0, 0, 9, 0, 0);
-        DateTime EndHour { get; set; } = new DateTime(0, 0, 0, 18, 0, 0);
-        int MinGap { get; set; } = 15;
-        int MaxHoursPerDay { get; set; } = 5;
-        int MinTimeFrame { get; set; } = 15;
+        [Key] public int Id { get; set; }
+        public DateTime StartHour { get; set; } = new DateTime(1, 1, 1, 9, 0, 0);
+        public DateTime EndHour { get; set; } = new DateTime(1, 1, 1, 18, 0, 0);
+        public int MinGap { get; set; } = 15;
+        public int MaxHoursPerDay { get; set; } = 5;
+        public int MinTimeFrame { get; set; } = 15;
     }
 }

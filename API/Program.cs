@@ -44,6 +44,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddTransient<UsersService>();
 builder.Services.AddTransient<AlgoService>();
+builder.Services.AddTransient<MissionService>();
+builder.Services.AddTransient<HubsService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

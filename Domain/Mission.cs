@@ -1,4 +1,5 @@
-﻿using Domain.Out;
+﻿using Domain.In;
+using Domain.Out;
 using Domain.Priv;
 using System;
 using System.Collections.Generic;
@@ -27,8 +28,8 @@ namespace Domain
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int Length { get; set; } = 2;
-        public List<string> OptionalDays { get; set; } = new List<string>();
-        public string[] OptionalHours { get; set; } = new string[2];
+        public List<DayString> OptionalDays { get; set; } = new List<DayString>();
+        public List<HourString> OptionalHours { get; set; } = new List<HourString>(2) { new HourString { Id = 1, Hour="" }, new HourString { Id = 2, Hour="" } };
         public DateTime DeadLine { get; set; }
 
         public bool AllDay {
@@ -37,13 +38,13 @@ namespace Domain
             }
             set {
                 if (value == true) {
-                    OptionalHours[0] = "9:00:00";
-                    OptionalHours[1] = "18:00:00";
+                    OptionalHours[0].Hour = "9:00:00";
+                    OptionalHours[1].Hour = "18:00:00";
                 }
                 allDay = value;
             }
         }
-        public bool IsRepeat { get; set; }
+        public bool IsRepeat { get; set; } = false;
 
         /*public string getRule()
         {
@@ -60,10 +61,12 @@ namespace Domain
         public List<MissionRank> RankListHistory { get; set; } = new List<MissionRank>();
         public Prior Priority { get; set; }
 
+        public bool settled { get; set; } = false;
+
         public AlgoMission ToAlgo() {
             return new AlgoMission {
-                OptionalDays = OptionalDays,
-                OptionalHours = OptionalHours,
+                OptionalDays = OptionalDays.Select(x => x.Day).ToList(),
+                OptionalHours = OptionalHours.Select(x => x.Hour).ToList(),
                 Id = Id,
                 DeadLine = DeadLine,
                 IsRepeat = IsRepeat,
@@ -84,6 +87,11 @@ namespace Domain
                 EndDate = EndDate,
                 AllDay = allDay
             };
+        }
+
+        public void update(InAlgo algoMission) {
+            EndDate = algoMission.EndDate;
+            StartDate = algoMission.StartDate;
         }
     }
 }
