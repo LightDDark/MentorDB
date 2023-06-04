@@ -2,13 +2,17 @@
 using Domain.In;
 using Domain.Out;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Services
 {
@@ -50,20 +54,24 @@ namespace Services
 
             AlgoComplete complete = new AlgoComplete() { AlgoMission = missions, ScheduleSetting = setting };
             // call algo with complete
-            
+            var myContent = JsonConvert.SerializeObject(complete);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
             HttpClientHandler handler = new HttpClientHandler() {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
             HttpClient client = new HttpClient(handler);
             
-            client.BaseAddress = new Uri("https://api.stackexchange.com/2.2/"); // algo adress
-            HttpResponseMessage response = client.GetAsync("answers?order=desc&sort=activity&site=stackoverflow").Result; // spesific get
+            client.BaseAddress = new Uri("http://localhost/algoComplete"); // algo address
+            HttpResponseMessage response = client.PostAsync("algoComplete", byteContent).Result;
             response.EnsureSuccessStatusCode();
-            string result = response.Content.ReadAsStringAsync().Result;
-            Console.WriteLine("Result: " + result);
+            string responseString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Result: " + responseString);
+            List<InAlgo> results = JsonConvert.DeserializeObject<List<InAlgo>>(responseString);
 
 
-            List<InAlgo> results = new List<InAlgo>();
             // save algo results
             results.ForEach(x => {
                 user.Missions.Find(a => a.Id == x.Id).update(x);
