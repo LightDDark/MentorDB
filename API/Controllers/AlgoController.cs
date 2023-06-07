@@ -1,5 +1,6 @@
-﻿using Domain;
+﻿using Domain.In;
 using Domain.Out;
+using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Protocol;
@@ -20,9 +21,11 @@ namespace API.Controllers {
         // Post: api/Algo
         // returns list of contacts
         [HttpPost]
-        public async Task<ActionResult<UiComplete>> NewSchedule(ScheduleSetting setting, List<int> missionsId) {
-            UiComplete? missions = await _service.CalculateSchedule(HttpContext.User.Claims.First().Value, setting, missionsId);
-            if (missions == null) {
+        public async Task<ActionResult<UiComplete>> NewSchedule(JointMissions missionListSetting)
+        {
+            UiComplete? missions = await _service.CalculateSchedule(HttpContext.User.Claims.First().Value, missionListSetting);
+            if (missions == null)
+            {
                 return NotFound();
             }
             return missions;

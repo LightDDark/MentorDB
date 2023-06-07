@@ -29,7 +29,7 @@ namespace Domain
         public DateTime? EndDate { get; set; }
         public int Length { get; set; } = 2;
         public List<DayString> OptionalDays { get; set; } = new List<DayString>();
-        public List<HourString> OptionalHours { get; set; } = new List<HourString>(2) { new HourString { Id = 1, Hour="" }, new HourString { Id = 2, Hour="" } };
+        public List<HourString> OptionalHours { get; set; } = new List<HourString>() ;
         public DateTime DeadLine { get; set; }
 
         public bool AllDay {
@@ -71,6 +71,7 @@ namespace Domain
                 DeadLine = DeadLine,
                 IsRepeat = IsRepeat,
                 Length = Length,
+                Description = Description,
                 Priority = Priority.ToString(),
                 RankListHistory = new List<MissionRank>(RankListHistory),
                 Type = Type

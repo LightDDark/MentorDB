@@ -15,7 +15,7 @@ namespace Domain.In {
         public string? Type { get; set; }
         public int Length { get; set; } = 2;
         public List<DayString> OptionalDays { get; set; } = new List<DayString>();
-        public List<HourString> OptionalHours { get; set; } = new List<HourString>(2) { new HourString { Id = 1, Hour = "" }, new HourString { Id = 2, Hour = "" } };
+        public List<HourString> OptionalHours { get; set; } = new List<HourString>() ;
         public DateTime DeadLine { get; set; }
         public Prior Priority { get; set; }
     }

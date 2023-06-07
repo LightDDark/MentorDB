@@ -27,5 +27,7 @@ namespace Domain.Out {
         public List<string> OptionalHours { get; set; } = new List<string>(2);
         public List<MissionRank> RankListHistory { get; set; } = new List<MissionRank>();
         public string? Type { get; set; }
+
+        public string? Description { get; set; }
     }
 }

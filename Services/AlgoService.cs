@@ -39,7 +39,7 @@ namespace Services
             return user;
         }
 
-        public async Task<UiComplete?> CalculateSchedule(string userId, ScheduleSetting setting, List<int> missionsId) {
+        public async Task<UiComplete?> CalculateSchedule(string userId, JointMissions missionListSetting) {
             // pre-process
             User? user = await UserWithAll(userId);
 
@@ -48,11 +48,13 @@ namespace Services
             }
 
             List<AlgoMission> missions = new List<AlgoMission>();
-            user.Missions.ForEach(x => {
+            List<int> missionIdList = missionListSetting.MissionsId;
+            List<Mission> missionsComplete = await _context.Mission.Include(y => y.OptionalDays).Include(y => y.OptionalHours).Include(y => y.RankListHistory).Where(y => missionIdList.Contains(y.Id)).ToListAsync();
+            missionsComplete.ForEach(x => {
                 missions.Add(x.ToAlgo());
             });
 
-            AlgoComplete complete = new AlgoComplete() { AlgoMission = missions, ScheduleSetting = setting };
+            AlgoComplete complete = new AlgoComplete() { AlgoMission = missions, ScheduleSetting = missionListSetting.Setting };
             // call algo with complete
             var myContent = JsonConvert.SerializeObject(complete);
             var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
@@ -64,7 +66,7 @@ namespace Services
             };
             HttpClient client = new HttpClient(handler);
             
-            client.BaseAddress = new Uri("http://localhost/algoComplete"); // algo address
+            client.BaseAddress = new Uri("http://localhost:5000/algoComplete"); // algo address
             HttpResponseMessage response = client.PostAsync("algoComplete", byteContent).Result;
             response.EnsureSuccessStatusCode();
             string responseString = await response.Content.ReadAsStringAsync();
@@ -86,7 +88,7 @@ namespace Services
             }
 
             // return algo results
-            return new UiComplete() {settings = setting, missions = user.Missions.Select(x => x.ToUi()).ToList() };
+            return new UiComplete() {settings = missionListSetting.Setting, missions = user.Missions.Select(x => x.ToUi()).ToList() };
         }
     }
 }
