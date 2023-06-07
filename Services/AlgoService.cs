@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Repository;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -71,7 +72,40 @@ namespace Services
             response.EnsureSuccessStatusCode();
             string responseString = await response.Content.ReadAsStringAsync();
             Console.WriteLine("Result: " + responseString);
-            List<InAlgo> results = JsonConvert.DeserializeObject<List<InAlgo>>(responseString);
+            List<string> responseStringList = JsonConvert.DeserializeObject<List<string>>(responseString);
+            string stringOfUn = responseStringList[0]; // Get the first element
+            responseStringList.RemoveAt(0); // Remove the first element from the list
+            int numOfUnschedualed = int.Parse(stringOfUn);
+            List<InAlgo> results = new List<InAlgo>(); ;
+            while (responseStringList.Count != 0)
+            {
+                int solutionId = int.Parse(responseStringList[0]);
+                responseStringList.RemoveAt(0); //remove the solution id
+                for (int i = 0; i < missionIdList.Count - numOfUnschedualed; i++)
+                {
+                    string misionIdString = responseStringList[0]; // Get the first element
+                    responseStringList.RemoveAt(0); // Remove the first element from the list
+                    int misionIdint = int.Parse(misionIdString);
+                    string startDate = responseStringList[0];
+                    responseStringList.RemoveAt(0); // Remove the first element from the list
+                    string endDate = responseStringList[0];
+                    responseStringList.RemoveAt(0); // Remove the first element from the list
+                    DateTimeOffset dateTimeOffsetS = DateTimeOffset.Parse(startDate, CultureInfo.InvariantCulture);
+                    string formattedDateStart = dateTimeOffsetS.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    DateTimeOffset dateTimeOffsetE = DateTimeOffset.Parse(endDate, CultureInfo.InvariantCulture);
+                    string formattedDateEnd = dateTimeOffsetE.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+
+                    InAlgo newAlgoMission = new InAlgo
+                    {
+                        Id = misionIdint,
+                        StartDate = DateTime.ParseExact(formattedDateStart, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
+                        EndDate = DateTime.ParseExact(formattedDateEnd, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture)
+                    };
+                    results.Add(newAlgoMission);
+
+                }
+            }
+                
 
 
             // save algo results
@@ -88,7 +122,7 @@ namespace Services
             }
 
             // return algo results
-            return new UiComplete() {settings = missionListSetting.Setting, missions = user.Missions.Select(x => x.ToUi()).ToList() };
+            return new UiComplete(missionListSetting.Setting, user.Missions.Select(x => x.ToUi()).ToList());
         }
     }
 }

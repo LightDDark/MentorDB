@@ -47,6 +47,8 @@ builder.Services.AddTransient<AlgoService>();
 builder.Services.AddTransient<MissionService>();
 builder.Services.AddTransient<HubsService>();
 
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
@@ -87,7 +89,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = true,
         ValidAudience = builder.Configuration["JWTParams:Audience"],
         ValidIssuer = builder.Configuration["JWTParams:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTParams:SecretKey"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTParams:SecretKey"])),
+        // Remove expiration-related settings
+        ValidateLifetime = false
     };
 });
 
@@ -103,6 +107,9 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
         });
 });
+
+// Remove expiration-related settings
+
 
 builder.Services.AddSignalR(hubOptions =>
 {

@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace Domain.Out {
     public class UiComplete {
-        public List<UiMission> missions { get; set; } = new List<UiMission>();
-        public ScheduleSetting settings { get; set; } = new ScheduleSetting();
+            public List<UiMission> missions { get; set; }
+            public ScheduleSetting settings { get; set; }
+
+            public UiComplete(ScheduleSetting scheduleSetting, List<UiMission> missionList)
+            {
+                settings = scheduleSetting;
+                missions = missionList;
+            }
+        
+
     }
 }
