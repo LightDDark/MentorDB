@@ -46,18 +46,6 @@ namespace Domain
         }
         public bool IsRepeat { get; set; } = false;
 
-        /*public string getRule()
-        {
-            if (rule == null) return "";
-            return rule.ToString();
-        }
-        public Rrule? Rule
-        {
-            set {
-                rule = value;
-                IsRepeat = true;
-            }
-        }*/
         public List<MissionRank> RankListHistory { get; set; } = new List<MissionRank>();
         public Prior Priority { get; set; }
 
