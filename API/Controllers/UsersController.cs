@@ -85,7 +85,6 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-
             bool? res = await _service.DeleteUser(id);
             if (res == null || res == false)
             {
