@@ -4,6 +4,7 @@ using Domain.Out;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Protocol;
+using NuGet.Packaging.Core;
 using Services;
 
 namespace API.Controllers
@@ -55,10 +56,10 @@ namespace API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         // add new contact to current user
         [HttpPost]
-        public async Task<IActionResult> PostMission(InMission mission)
+        public async Task<ActionResult<int>> PostMission(InMission mission)
         {
 
-            bool? res = await _service.AddMission(new Mission()
+            int? res = await _service.AddMission(new Mission()
             {
                 Title = mission.Title,
                 Description = mission.Description,
@@ -75,12 +76,12 @@ namespace API.Controllers
                 return Problem("Entity set 'MentorDataContext.User'  is null.");
             }
 
-            if (res == false)
+            if (res == null)
             {
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok(res.Value);
         }
 
         // DELETE: api/Contacts/5

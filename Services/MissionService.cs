@@ -80,13 +80,13 @@ namespace Services {
             return true;
         }
 
-        public async Task<bool?> AddMission(Mission mission, string userId) {
+        public async Task<int?> AddMission(Mission mission, string userId) {
             if (_context.User == null) {
                 return null;
             }
             User? user = await UserWithAll(userId);
             if (user == null) {
-                return false;
+                return null;
             }
             if (user.Missions == null) {
                 user.Missions = new List<Mission>();
@@ -100,7 +100,7 @@ namespace Services {
                 throw;
             }
 
-            return true;
+            return mission.Id;
         }
 
         public async Task<bool?> DeleteMission(int missionId, string userId) {
