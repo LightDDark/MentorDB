@@ -65,7 +65,48 @@ namespace Services
 
             return true;
         }
+        private async ValueTask<User?> UserWithAll(string userId)
+        {
+            if (_context.User == null)
+            {
+                return null;
+            }
+            User? user = await _context.User.FindAsync(userId);
 
+            if (user == null)
+            {
+                return null;
+            }
+
+            user = await _context.User.Include(x => x.Missions).Include(x => x.Schedule).FirstOrDefaultAsync(u => u.Id == user.Id);
+            return user;
+        }
+
+        public async Task<bool?> DeleteUser(string userId)
+        {
+            if (_context.User == null)
+            {
+                return null;
+            }
+            User? user = await UserWithAll(userId);
+            if (user == null)
+            {
+                return null;
+            }
+
+            _context.User.Remove(user);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return true;
+        }
         private bool UserExists(string id)
         {
             return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();

@@ -81,5 +81,18 @@ namespace API.Controllers
                 signingCredentials: mac);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+
+            bool? res = await _service.DeleteUser(id);
+            if (res == null || res == false)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }
