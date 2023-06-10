@@ -76,7 +76,7 @@ namespace Services
             string stringOfUn = responseStringList[0]; // Get the first element
             responseStringList.RemoveAt(0); // Remove the first element from the list
             int numOfUnschedualed = int.Parse(stringOfUn);
-            List<InAlgo> results = new List<InAlgo>(); ;
+            List<InAlgo> results = new List<InAlgo>(); 
             while (responseStringList.Count != 0)
             {
                 int solutionId = int.Parse(responseStringList[0]);
@@ -98,8 +98,8 @@ namespace Services
                     InAlgo newAlgoMission = new InAlgo
                     {
                         Id = misionIdint,
-                        StartDate = DateTime.ParseExact(formattedDateStart, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
-                        EndDate = DateTime.ParseExact(formattedDateEnd, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture)
+                        StartDate = DateTime.ParseExact(formattedDateStart, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
+                        EndDate = DateTime.ParseExact(formattedDateEnd, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal)
                     };
                     results.Add(newAlgoMission);
 
