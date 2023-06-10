@@ -8,7 +8,7 @@ namespace Domain.Priv {
     public class MissionRank {
         public int Id { get; set; }
         public int Rank { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
     }
 }

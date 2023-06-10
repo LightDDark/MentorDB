@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Domain.Out;
+using Domain.Priv;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using System;
@@ -130,5 +131,74 @@ namespace Services {
 
             return true;
         }
+
+        public async Task<List<UiMission>> SuggestPopularMissions(string userId, string type)
+        {
+            User? user = await UserWithAll(userId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            List<UiMission> suggestedMissions = new List<UiMission>();
+
+            // Retrieve distinct missions with the same type that are most common among other users
+            var mostCommonMissions = _context.Mission
+                .Where(m => m.Type == type)
+                .GroupBy(m => m.Title)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.First())
+                .AsEnumerable() // Fetch missions from the database and switch to in-memory evaluation
+                .Where(m => !user.Missions.Any(um => um.Title == m.Title)) // Exclude missions with the same title as the user's existing missions
+                .Take(3);
+
+            foreach (var mission in mostCommonMissions)
+            {
+                suggestedMissions.Add(new UiMission()
+                {
+                    Id = mission.Id,
+                    AllDay = mission.AllDay,
+                    Description = mission.Description,
+                    EndDate = mission.EndDate,
+                    StartDate = mission.StartDate,
+                    Title = mission.Title,
+                    Type = mission.Type
+                });
+            }
+
+            return suggestedMissions;
+        }
+
+       
+
+        public async Task UpdateMissionRanks(List<Mission> missions, int rank)
+        {
+            foreach (var mission in missions)
+            {
+                if (mission.StartDate != null && mission.EndDate != null)
+                {
+                    MissionRank newRank = new MissionRank
+                    {
+                        Rank = rank,
+                        StartTime = mission.StartDate,
+                        EndTime = mission.EndDate
+                    };
+
+                    mission.RankListHistory.Add(newRank);
+                }
+            }
+
+            _context.SaveChanges();
+        }
+
+        public async Task<List<Mission>> GetMissionsByIds(List<int> missionIds)
+        {
+            return await _context.Mission
+                .Where(m => missionIds.Contains(m.Id))
+                .ToListAsync();
+        }
+
+
     }
 }

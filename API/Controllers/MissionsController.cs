@@ -36,11 +36,25 @@ namespace API.Controllers
             return missions;
         }
 
+        // GET: api/Missions/SuggestMissions?type={type}
+        // Suggest new missions according to the specified type for the user
+        [HttpGet("SuggestMissions")]
+        public async Task<ActionResult<IEnumerable<UiMission>>> SuggestMissions(string type)
+        {
+            List<UiMission>? suggestedMissions = await _service.SuggestPopularMissions(HttpContext.User.Claims.First().Value, type);
+            if (suggestedMissions == null)
+            {
+                return NotFound();
+            }
 
-        // PUT: api/Contacts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // update details of contact with the given id
-        [HttpPut("{id}")]
+            return suggestedMissions;
+        }
+
+    
+    // PUT: api/Contacts/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    // update details of contact with the given id
+    [HttpPut("{id}")]
         public async Task<IActionResult> PutMission(UiMission mission)
         {
             bool res = await _service.UpdateMission(mission, HttpContext.User.Claims.First().Value);
@@ -97,6 +111,29 @@ namespace API.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("updateRanks")]
+        public async Task<IActionResult> UpdateMissionRanks([FromBody] List<int> missionIds, int rank)
+        {
+            try
+            {
+                List<Mission> missions = await _service.GetMissionsByIds(missionIds);
+
+                if (missions.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                await _service.UpdateMissionRanks(missions, rank);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions and return an appropriate response
+                return StatusCode(500, "An error occurred while updating mission ranks.");
+            }
         }
 
 
