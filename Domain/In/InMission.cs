@@ -19,6 +19,8 @@ namespace Domain.In {
         public DateTime DeadLine { get; set; }
         public Prior Priority { get; set; }
         public bool Setteled { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
     }
 }

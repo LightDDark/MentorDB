@@ -69,8 +69,8 @@ namespace Services {
             user_mission.StartDate = mission.StartDate;
             user_mission.Title = mission.Title;
             user_mission.Type = mission.Type;
-
-
+            user_mission.OptionalDays = mission.OptionalDays;
+            user_mission.OptionalHours = mission.OptionalHours;
             _context.Entry(user_mission).State = EntityState.Modified;
 
             try {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Priv;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace Domain.Out {
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool Setteled { get; set; }
+        public List<DayString> OptionalDays { get; set; } = new List<DayString>();
+        public List<HourString> OptionalHours { get; set; } = new List<HourString>();
     }
 }

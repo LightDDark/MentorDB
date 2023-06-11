@@ -84,6 +84,8 @@ namespace API.Controllers
                 DeadLine = mission.DeadLine,             
                 Priority = mission.Priority,
                 Settled = mission.Setteled,
+                StartDate = mission.StartDate,
+                EndDate = mission.EndDate,
 
             }, HttpContext.User.Claims.First().Value); 
             if (res == null)
