@@ -75,7 +75,6 @@ namespace Domain
                 StartDate = StartDate,
                 EndDate = EndDate,
                 Setteled = Settled,
-                AllDay = AllDay
             };
         }
 
