@@ -81,10 +81,11 @@ namespace API.Controllers
                 Length = mission.Length,
                 OptionalDays = mission.OptionalDays,
                 OptionalHours = mission.OptionalHours,
-                DeadLine = mission.DeadLine,
-                Priority = mission.Priority
-                
-            }, HttpContext.User.Claims.First().Value);
+                DeadLine = mission.DeadLine,             
+                Priority = mission.Priority,
+                Settled = mission.Setteled,
+
+            }, HttpContext.User.Claims.First().Value); 
             if (res == null)
             {
                 return Problem("Entity set 'MentorDataContext.User'  is null.");

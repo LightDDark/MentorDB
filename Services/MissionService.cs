@@ -43,7 +43,7 @@ namespace Services {
             List<UiMission> missions = new List<UiMission>();
             user.Missions.ForEach(x => {
                 missions.Add(
-                    new UiMission() { Id = x.Id, AllDay = x.AllDay, Description = x.Description, EndDate = x.EndDate, StartDate = x.StartDate, Title = x.Title, Type = x.Type});
+                    new UiMission() { Id = x.Id, Setteled = x.Settled, AllDay = x.AllDay, Description = x.Description, EndDate = x.EndDate, StartDate = x.StartDate, Title = x.Title, Type = x.Type});
             });
 
             return missions;
@@ -63,12 +63,14 @@ namespace Services {
                 return false;
             }
 
+            user_mission.Settled = mission.Setteled;
             user_mission.AllDay = mission.AllDay;
             user_mission.Description = mission.Description;
             user_mission.EndDate = mission.EndDate;
             user_mission.StartDate = mission.StartDate;
             user_mission.Title = mission.Title;
             user_mission.Type = mission.Type;
+
 
             _context.Entry(user_mission).State = EntityState.Modified;
 
@@ -158,6 +160,7 @@ namespace Services {
                 suggestedMissions.Add(new UiMission()
                 {
                     Id = mission.Id,
+                    Setteled = mission.Settled,
                     AllDay = mission.AllDay,
                     Description = mission.Description,
                     EndDate = mission.EndDate,

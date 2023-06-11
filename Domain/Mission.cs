@@ -49,7 +49,7 @@ namespace Domain
         public List<MissionRank> RankListHistory { get; set; } = new List<MissionRank>();
         public Prior Priority { get; set; }
 
-        public bool settled { get; set; } = false;
+        public bool Settled { get; set; } = false;
 
         public AlgoMission ToAlgo() {
             return new AlgoMission {
@@ -74,7 +74,8 @@ namespace Domain
                 Type = Type,
                 StartDate = StartDate,
                 EndDate = EndDate,
-                AllDay = allDay
+                Setteled = Settled,
+                AllDay = AllDay
             };
         }
 
