@@ -17,5 +17,6 @@ namespace Domain.Out {
         public bool Settled { get; set; }
         public List<DayString> OptionalDays { get; set; } = new List<DayString>();
         public List<HourString> OptionalHours { get; set; } = new List<HourString>();
+        public int Rank { get; set; } = 4;
     }
 }
