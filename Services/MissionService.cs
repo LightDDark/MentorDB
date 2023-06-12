@@ -43,7 +43,7 @@ namespace Services {
             List<UiMission> missions = new List<UiMission>();
             user.Missions.ForEach(x => {
                 missions.Add(
-                    new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, EndDate = x.EndDate, StartDate = x.StartDate, Title = x.Title, Type = x.Type});
+                    new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, EndDate = x.EndDate, StartDate = x.StartDate, Title = x.Title, Type = x.Type, Rank = x.Rank});
             });
 
             return missions;
@@ -71,6 +71,9 @@ namespace Services {
             user_mission.Type = mission.Type;
             user_mission.OptionalDays = mission.OptionalDays;
             user_mission.OptionalHours = mission.OptionalHours;
+            user_mission.Rank = mission.Rank;
+
+
             _context.Entry(user_mission).State = EntityState.Modified;
 
             try {
