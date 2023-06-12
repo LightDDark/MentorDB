@@ -81,6 +81,7 @@ namespace Domain
         public void update(InAlgo algoMission) {
             EndDate = algoMission.EndDate;
             StartDate = algoMission.StartDate;
+            Settled = true;
         }
     }
 }
