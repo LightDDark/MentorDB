@@ -74,7 +74,7 @@ namespace Domain
                 Type = Type,
                 StartDate = StartDate,
                 EndDate = EndDate,
-                Setteled = Settled,
+                Settled = Settled,
             };
         }
 
