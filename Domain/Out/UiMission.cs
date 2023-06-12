@@ -14,8 +14,9 @@ namespace Domain.Out {
         public string? Type { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public bool Setteled { get; set; }
+        public bool Settled { get; set; }
         public List<DayString> OptionalDays { get; set; } = new List<DayString>();
         public List<HourString> OptionalHours { get; set; } = new List<HourString>();
+        public int Rank { get; set; } = 4;
     }
 }

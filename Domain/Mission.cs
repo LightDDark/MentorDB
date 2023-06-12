@@ -27,7 +27,7 @@ namespace Domain
         public string? Type { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public int Length { get; set; } = 2;
+        public int Length { get; set; } = 60;
         public List<DayString> OptionalDays { get; set; } = new List<DayString>();
         public List<HourString> OptionalHours { get; set; } = new List<HourString>() ;
         public DateTime DeadLine { get; set; }
@@ -50,6 +50,7 @@ namespace Domain
         public Prior Priority { get; set; }
 
         public bool Settled { get; set; } = false;
+        public int Rank { get; set; } = 4;
 
         public AlgoMission ToAlgo() {
             return new AlgoMission {
@@ -74,7 +75,7 @@ namespace Domain
                 Type = Type,
                 StartDate = StartDate,
                 EndDate = EndDate,
-                Setteled = Settled,
+                Settled = Settled,
             };
         }
 

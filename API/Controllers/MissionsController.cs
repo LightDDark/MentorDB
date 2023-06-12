@@ -83,7 +83,7 @@ namespace API.Controllers
                 OptionalHours = mission.OptionalHours,
                 DeadLine = mission.DeadLine,             
                 Priority = mission.Priority,
-                Settled = mission.Setteled,
+                Settled = mission.Settled,
                 StartDate = mission.StartDate,
                 EndDate = mission.EndDate,
 

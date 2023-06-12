@@ -18,7 +18,7 @@ namespace Domain.In {
         public List<HourString> OptionalHours { get; set; } = new List<HourString>() ;
         public DateTime DeadLine { get; set; }
         public Prior Priority { get; set; }
-        public bool Setteled { get; set; }
+        public bool Settled { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
