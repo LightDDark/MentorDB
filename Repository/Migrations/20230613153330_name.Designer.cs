@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -10,9 +11,11 @@ using Repository;
 namespace Repository.Migrations
 {
     [DbContext(typeof(MentorDataContext))]
-    partial class MentorDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230613153330_name")]
+    partial class name
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
