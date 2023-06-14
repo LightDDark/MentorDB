@@ -13,7 +13,7 @@ namespace Domain.In {
         public string Title { get; set; } = new string("Default");
         public string? Description { get; set; } = new string("Default");
         public string? Type { get; set; }
-        public int Length { get; set; } = 2;
+        public int Length { get; set; } = 60;
         public List<DayString> OptionalDays { get; set; } = new List<DayString>();
         public List<HourString> OptionalHours { get; set; } = new List<HourString>() ;
         public DateTime DeadLine { get; set; }
