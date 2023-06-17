@@ -160,12 +160,12 @@ new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, E
                 suggestedMissions.Add(new UiMission()
                 {
                     Id = mission.Id,
-                    Settled = mission.Settled,
+                    Settled = false,
                     Description = mission.Description,
                     EndDate = mission.EndDate,
                     StartDate = mission.StartDate,
                     Title = mission.Title,
-                    Type = mission.Type
+                    Type = mission.Type,                  
                 });
             }
 
