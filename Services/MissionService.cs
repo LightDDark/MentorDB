@@ -1,7 +1,9 @@
 ﻿using Domain;
+using Domain.In;
 using Domain.Out;
 using Domain.Priv;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Repository;
 using System;
 using System.Collections.Generic;
@@ -49,7 +51,7 @@ new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, E
             return missions;
         }
 
-        public async Task<bool> UpdateMission(UiMission mission, string userId) {
+        public async Task<bool> UpdateMission(InMission mission, string userId) {
 
             User? user = await UserWithAll(userId);
 
@@ -71,7 +73,8 @@ new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, E
             user_mission.Type = mission.Type;
             user_mission.OptionalDays = mission.OptionalDays;
             user_mission.OptionalHours = mission.OptionalHours;
-            user_mission.Rank = mission.Rank;
+            user_mission.DeadLine = mission.DeadLine;
+            user_mission.Length = mission.Length;
             _context.Entry(user_mission).State = EntityState.Modified;
 
             try {
@@ -142,6 +145,9 @@ new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, E
             {
                 return null;
             }
+            if (user.Missions == null) {
+                user.Missions = new List<Mission>();
+            }
 
             List<UiMission> suggestedMissions = new List<UiMission>();
 
@@ -153,13 +159,33 @@ new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, E
                 .Select(g => g.First())
                 .AsEnumerable() // Fetch missions from the database and switch to in-memory evaluation
                 .Where(m => !user.Missions.Any(um => um.Title == m.Title)) // Exclude missions with the same title as the user's existing missions
-                .Take(3);
+                .Take(3)
+                .ToList();
+            Mission? lastM = _context.Mission.OrderBy(m=>m.Id).Last();
+            if (lastM == null || mostCommonMissions.IsNullOrEmpty()) {
+                return suggestedMissions;
+            }
 
-            foreach (var mission in mostCommonMissions)
-            {
-                suggestedMissions.Add(new UiMission()
-                {
-                    Id = mission.Id,
+            foreach (var mission in mostCommonMissions) {
+                int? id = await AddMission(new Mission() {
+                    Title = mission.Title,
+                    Description = mission.Description,
+                    Type = mission.Type,
+                    Length = mission.Length,
+                    OptionalDays = mission.OptionalDays,
+                    OptionalHours = mission.OptionalHours,
+                    DeadLine = mission.DeadLine,
+                    Priority = mission.Priority,
+                    Settled = false,
+                    StartDate = mission.StartDate,
+                    EndDate = mission.EndDate,
+
+                }, userId);
+                if (!id.HasValue) {
+                    continue;
+                }
+                suggestedMissions.Add(new UiMission() {
+                    Id = (int)id,
                     Settled = mission.Settled,
                     Description = mission.Description,
                     EndDate = mission.EndDate,
@@ -168,6 +194,7 @@ new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, E
                     Type = mission.Type
                 });
             }
+            
 
             return suggestedMissions;
         }

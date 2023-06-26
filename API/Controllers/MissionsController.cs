@@ -55,7 +55,7 @@ namespace API.Controllers
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     // update details of contact with the given id
     [HttpPut("{id}")]
-        public async Task<IActionResult> PutMission(UiMission mission)
+        public async Task<IActionResult> PutMission(InMission mission)
         {
             bool res = await _service.UpdateMission(mission, HttpContext.User.Claims.First().Value);
             if (res == false)

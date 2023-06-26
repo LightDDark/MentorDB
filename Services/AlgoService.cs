@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Repository;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -15,14 +16,11 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Services
-{
-    public class AlgoService
-    {
+namespace Services {
+    public class AlgoService {
         private readonly MentorDataContext _context;
 
-        public AlgoService(MentorDataContext context)
-        {
+        public AlgoService(MentorDataContext context) {
             _context = context;
         }
 
@@ -66,26 +64,30 @@ namespace Services
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
             HttpClient client = new HttpClient(handler);
-            
+
             client.BaseAddress = new Uri("http://localhost:5000/algoComplete"); // algo address
             HttpResponseMessage response = client.PostAsync("algoComplete", byteContent).Result;
             response.EnsureSuccessStatusCode();
             string responseString = await response.Content.ReadAsStringAsync();
             Console.WriteLine("Result: " + responseString);
             List<string> responseStringList = JsonConvert.DeserializeObject<List<string>>(responseString);
+            List<string> cantSchedAllHigh = new List<string> { "0", "0", "0" };
+            if (cantSchedAllHigh.SequenceEqual(responseStringList)) {
+                return null;
+            }
             string stringOfUn = responseStringList[0]; // Get the first element
             responseStringList.RemoveAt(0); // Remove the first element from the list
             int numOfUnschedualed = int.Parse(stringOfUn);
-            List<InAlgo> results = new List<InAlgo>(); 
-            while (responseStringList.Count != 0)
-            {
+            List<InAlgo> results = new List<InAlgo>();
+            List<int> idList = new List<int>();
+            while (responseStringList.Count != 0) {
                 int solutionId = int.Parse(responseStringList[0]);
                 responseStringList.RemoveAt(0); //remove the solution id
-                for (int i = 0; i < missionIdList.Count - numOfUnschedualed; i++)
-                {
+                for (int i = 0; i < missionIdList.Count - numOfUnschedualed; i++) {
                     string misionIdString = responseStringList[0]; // Get the first element
                     responseStringList.RemoveAt(0); // Remove the first element from the list
                     int misionIdint = int.Parse(misionIdString);
+                    idList.Add(misionIdint);
                     string startDate = responseStringList[0];
                     responseStringList.RemoveAt(0); // Remove the first element from the list
                     string endDate = responseStringList[0];
@@ -94,9 +96,7 @@ namespace Services
                     string formattedDateStart = dateTimeOffsetS.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
                     DateTimeOffset dateTimeOffsetE = DateTimeOffset.Parse(endDate, CultureInfo.InvariantCulture);
                     string formattedDateEnd = dateTimeOffsetE.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-
-                    InAlgo newAlgoMission = new InAlgo
-                    {
+                    InAlgo newAlgoMission = new InAlgo {
                         Id = misionIdint,
                         StartDate = DateTime.ParseExact(formattedDateStart, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
                         EndDate = DateTime.ParseExact(formattedDateEnd, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal)
@@ -105,13 +105,15 @@ namespace Services
 
                 }
             }
-                
 
+            user.Missions.ForEach(a => a.unsettle());
 
             // save algo results
             results.ForEach(x => {
                 user.Missions.Find(a => a.Id == x.Id).update(x);
             });
+
+
 
             _context.Entry(user).State = EntityState.Modified;
 

@@ -84,5 +84,9 @@ namespace Domain
             StartDate = algoMission.StartDate;
             Settled = true;
         }
+
+        public void unsettle() {
+            Settled = false;
+        }
     }
 }
