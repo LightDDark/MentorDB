@@ -191,7 +191,7 @@ new UiMission() { Id = x.Id, Settled = x.Settled, Description = x.Description, E
                     EndDate = mission.EndDate,
                     StartDate = mission.StartDate,
                     Title = mission.Title,
-                    Type = mission.Type
+                    Type = mission.Type,                  
                 });
             }
             
