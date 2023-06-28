@@ -9,11 +9,15 @@ using static Domain.Mission;
 
 namespace Domain.In {
     public class InMission {
+
+        private const string DEFAULT = "Default";
+
+        private const int DEFAULT_LENGTH = 60;
         public int Id { get; set; }
-        public string Title { get; set; } = new string("Default");
-        public string? Description { get; set; } = new string("Default");
+        public string Title { get; set; } = new string(DEFAULT);
+        public string? Description { get; set; } = new string(DEFAULT);
         public string? Type { get; set; }
-        public int Length { get; set; } = 60;
+        public int Length { get; set; } = DEFAULT_LENGTH;
         public List<DayString> OptionalDays { get; set; } = new List<DayString>();
         public List<HourString> OptionalHours { get; set; } = new List<HourString>() ;
         public DateTime DeadLine { get; set; }

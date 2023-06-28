@@ -19,6 +19,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Services {
     public class AlgoService {
         private readonly MentorDataContext _context;
+        private const int STARTING_INDEX = 0;
+        private const int EMPTY = 0;
+        private const string SITE_URL = "http://localhost:5000/algoComplete";
+        private const string DATE_FORMAT = "yyyy-MM-ddTHH:mm:ss.fffZ";
 
         public AlgoService(MentorDataContext context) {
             _context = context;
@@ -65,7 +69,7 @@ namespace Services {
             };
             HttpClient client = new HttpClient(handler);
 
-            client.BaseAddress = new Uri("http://localhost:5000/algoComplete"); // algo address
+            client.BaseAddress = new Uri(SITE_URL); // algo address
             HttpResponseMessage response = client.PostAsync("algoComplete", byteContent).Result;
             response.EnsureSuccessStatusCode();
             string responseString = await response.Content.ReadAsStringAsync();
@@ -75,31 +79,31 @@ namespace Services {
             if (cantSchedAllHigh.SequenceEqual(responseStringList)) {
                 return null;
             }
-            string stringOfUn = responseStringList[0]; // Get the first element
-            responseStringList.RemoveAt(0); // Remove the first element from the list
+            string stringOfUn = responseStringList[STARTING_INDEX]; // Get the first element
+            responseStringList.RemoveAt(STARTING_INDEX); // Remove the first element from the list
             int numOfUnschedualed = int.Parse(stringOfUn);
             List<InAlgo> results = new List<InAlgo>();
             List<int> idList = new List<int>();
-            while (responseStringList.Count != 0) {
-                int solutionId = int.Parse(responseStringList[0]);
-                responseStringList.RemoveAt(0); //remove the solution id
-                for (int i = 0; i < missionIdList.Count - numOfUnschedualed; i++) {
-                    string misionIdString = responseStringList[0]; // Get the first element
-                    responseStringList.RemoveAt(0); // Remove the first element from the list
+            while (responseStringList.Count != EMPTY) {
+                int solutionId = int.Parse(responseStringList[STARTING_INDEX]);
+                responseStringList.RemoveAt(STARTING_INDEX); //remove the solution id
+                for (int i = STARTING_INDEX; i < missionIdList.Count - numOfUnschedualed; i++) {
+                    string misionIdString = responseStringList[STARTING_INDEX]; // Get the first element
+                    responseStringList.RemoveAt(STARTING_INDEX); // Remove the first element from the list
                     int misionIdint = int.Parse(misionIdString);
                     idList.Add(misionIdint);
-                    string startDate = responseStringList[0];
-                    responseStringList.RemoveAt(0); // Remove the first element from the list
-                    string endDate = responseStringList[0];
-                    responseStringList.RemoveAt(0); // Remove the first element from the list
+                    string startDate = responseStringList[STARTING_INDEX];
+                    responseStringList.RemoveAt(STARTING_INDEX); // Remove the first element from the list
+                    string endDate = responseStringList[STARTING_INDEX];
+                    responseStringList.RemoveAt(STARTING_INDEX); // Remove the first element from the list
                     DateTimeOffset dateTimeOffsetS = DateTimeOffset.Parse(startDate, CultureInfo.InvariantCulture);
-                    string formattedDateStart = dateTimeOffsetS.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    string formattedDateStart = dateTimeOffsetS.ToString(DATE_FORMAT);
                     DateTimeOffset dateTimeOffsetE = DateTimeOffset.Parse(endDate, CultureInfo.InvariantCulture);
-                    string formattedDateEnd = dateTimeOffsetE.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    string formattedDateEnd = dateTimeOffsetE.ToString(DATE_FORMAT);
                     InAlgo newAlgoMission = new InAlgo {
                         Id = misionIdint,
-                        StartDate = DateTime.ParseExact(formattedDateStart, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
-                        EndDate = DateTime.ParseExact(formattedDateEnd, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal)
+                        StartDate = DateTime.ParseExact(formattedDateStart, DATE_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
+                        EndDate = DateTime.ParseExact(formattedDateEnd, DATE_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal)
                     };
                     results.Add(newAlgoMission);
 

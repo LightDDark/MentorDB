@@ -13,6 +13,11 @@ namespace Domain
 {
     public class Mission
     {
+        private const string DEFAULT = "Default";
+        private const int DEFAULT_LENGTH = 60;
+        private const string DEFAULT_START_HOUR = "9:00:00";
+        private const string DEFAULT_END_HOUR = "18:00:00";
+        private const int DEFAULT_RANK = 4;
         public enum Prior {
             [Description("high")] High,
             [Description("medium")]  Meduim,
@@ -22,12 +27,12 @@ namespace Domain
         private bool allDay;
 
         [Key] public int Id { get; set; }
-        public string Title { get; set; } = new string("Default");
-        public string? Description { get; set; } = new string("Default");
+        public string Title { get; set; } = new string(DEFAULT);
+        public string? Description { get; set; } = new string(DEFAULT);
         public string? Type { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public int Length { get; set; } = 60;
+        public int Length { get; set; } = DEFAULT_LENGTH;
         public List<DayString> OptionalDays { get; set; } = new List<DayString>();
         public List<HourString> OptionalHours { get; set; } = new List<HourString>() ;
         public DateTime DeadLine { get; set; }
@@ -38,8 +43,8 @@ namespace Domain
             }
             set {
                 if (value == true) {
-                    OptionalHours[0].Hour = "9:00:00";
-                    OptionalHours[1].Hour = "18:00:00";
+                    OptionalHours[0].Hour = DEFAULT_START_HOUR;
+                    OptionalHours[1].Hour = DEFAULT_END_HOUR;
                 }
                 allDay = value;
             }
@@ -50,7 +55,7 @@ namespace Domain
         public Prior Priority { get; set; }
 
         public bool Settled { get; set; } = false;
-        public int Rank { get; set; } = 4;
+        public int Rank { get; set; } = DEFAULT_RANK;
 
         public AlgoMission ToAlgo() {
             return new AlgoMission {

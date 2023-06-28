@@ -8,6 +8,14 @@ namespace Domain.Priv
 {
     public class Rrule
     {
+        private const string DAILY = "Daily";
+        private const string WEEKLY = "Weekly";
+        private const string MONTHLY = "Monthly";
+        private const string YEARLY = "Yearly";
+        private const int DEFAUL_STARTING_VALUE = 0;
+        private const int DEFAUL_STARTING_LENGTH = 2;
+        private const int FIRST_INDEX = 0;
+        private const int SECOND_INDEX = 1;
         public enum Freq
         {
             Daily,
@@ -17,20 +25,20 @@ namespace Domain.Priv
         }
         private static Dictionary<Freq, string> freqDescription = new Dictionary<Freq, string>()
             {
-                {Freq.Daily,  "Daily"},
-                {Freq.Weekly,  "Weekly"},
-                {Freq.Monthly, "Monthly"},
-                {Freq.Yearly, "Yearly"}
+                {Freq.Daily,  DAILY},
+                {Freq.Weekly,  WEEKLY},
+                {Freq.Monthly, MONTHLY},
+                {Freq.Yearly, YEARLY}
             };
         private static Dictionary<string, Freq> descFreq = new Dictionary<string, Freq>()
             {
-                {"Daily", Freq.Daily},
-                {"Weekly", Freq.Weekly},
-                {"Monthly", Freq.Monthly},
-                {"Yearly", Freq.Yearly}
+                {DAILY, Freq.Daily},
+                {WEEKLY, Freq.Weekly},
+                {MONTHLY, Freq.Monthly},
+                {YEARLY, Freq.Yearly}
             };
         private Freq freq;
-        private int[] cid = new int[2];
+        private int[] cid = new int[DEFAUL_STARTING_LENGTH];
         private DateTime? until = null;
 
 
@@ -39,12 +47,12 @@ namespace Domain.Priv
             this.freq = freq;
             this.until = until;
         }
-        public Rrule(Freq freq, int count = 0, int interval = 0)
+        public Rrule(Freq freq, int count = DEFAUL_STARTING_VALUE, int interval = DEFAUL_STARTING_VALUE)
         {
 
             this.freq = freq;
-            this.cid[0] = count;
-            this.cid[1] = interval;
+            this.cid[FIRST_INDEX] = count;
+            this.cid[SECOND_INDEX] = interval;
         }
 
         public override string ToString()
@@ -59,15 +67,15 @@ namespace Domain.Priv
                 return sb.ToString();
             }
 
-            if (cid[0] != 0)
+            if (cid[FIRST_INDEX] != DEFAUL_STARTING_VALUE)
             {
                 sb.Append(";COUNT=");
-                sb.Append(cid[0]);
+                sb.Append(cid[FIRST_INDEX]);
             }
-            if (cid[1] != 0)
+            if (cid[SECOND_INDEX] != DEFAUL_STARTING_VALUE)
             {
                 sb.Append(";INTERVAL=");
-                sb.Append(cid[1]);
+                sb.Append(cid[SECOND_INDEX]);
             }
             return sb.ToString();
         }
@@ -75,27 +83,27 @@ namespace Domain.Priv
         public static Rrule fromString(string rule)
         {
             Freq? f = null;
-            int count = 0, interval = 0;
+            int count = DEFAUL_STARTING_VALUE, interval = DEFAUL_STARTING_VALUE;
             DateTime? d = null;
             string[] subs = rule.Split(';');
             foreach (string item in subs)
             {
                 string[] subsub = item.Split('=');
-                if (subsub[0] == "FREQ")
+                if (subsub[FIRST_INDEX] == "FREQ")
                 {
-                    f = descFreq.GetValueOrDefault(subsub[1]);
+                    f = descFreq.GetValueOrDefault(subsub[SECOND_INDEX]);
                 }
-                else if (subsub[0] == "COUNT")
+                else if (subsub[FIRST_INDEX] == "COUNT")
                 {
-                    count = int.Parse(subsub[1]);
+                    count = int.Parse(subsub[SECOND_INDEX]);
                 }
-                else if (subsub[0] == "INTERVAL")
+                else if (subsub[FIRST_INDEX] == "INTERVAL")
                 {
-                    interval = int.Parse(subsub[1]);
+                    interval = int.Parse(subsub[SECOND_INDEX]);
                 }
                 else
                 {
-                    d = DateTime.Parse(subsub[1]);
+                    d = DateTime.Parse(subsub[SECOND_INDEX]);
                 }
             }
             if (d != null)
